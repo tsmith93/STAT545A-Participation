@@ -1,6 +1,8 @@
 ---
-title: "cm012 Exercises: Factors"
-output: html_notebook
+title: 'cm012 Exercises: Factors'
+output:
+  html_document:
+    df_print: paged
 editor_options:
   chunk_output_type: inline
 ---
@@ -28,9 +30,10 @@ What is a factor? A "truly categorical" variable. You can think of it as a vecto
 
 Examples of Base R's obsession with coercing to factors:
 
-```{r}
+```{r} 
 data.frame(x=c("A", "B")) %>% 
   str()
+
 ```
 
 
@@ -53,6 +56,7 @@ iris %>%
 
 ```{r}
 c(iris$Species, "setosa")
+as.character(iris$Species)
 ```
 
 
@@ -72,7 +76,11 @@ set.seed(10)
 Convert `draw` to a factor. What are the levels? How many are there? How many of each category was drawn?
 
 ```{r}
-
+draw <- factor(draw)
+draw
+levels(draw)
+nlevels(draw)
+fct_count(draw)
 ```
 
 
@@ -82,6 +90,8 @@ We saw that `c()` doesn't work for concatenating. Modify the following code to u
 
 ```{r}
 c(lotr1$Film, lotr2$Film)
+#fct_c automatically adds both levels together
+fct_c(lotr1$Film, lotr2$Film)
 ```
 
 Try binding by row `lotr1` and `lotr2`:
@@ -92,7 +102,9 @@ Try binding by row `lotr1` and `lotr2`:
 Which one is more lenient? Which would you prefer?
 
 ```{r}
-
+rbind(lotr1, lotr2) %>% str()
+bind_rows(lotr1, lotr2)
+as.character(5)
 ```
 
 
@@ -103,6 +115,8 @@ Levels don't always have to be present ("observed") in the factor. Example of wh
 ```{r}
 gap_gs <- gapminder %>% filter(country %in% c("Germany", "Sweden"))
 nlevels(gap_gs$country)
+levels(gap_gs$country)
+as.character(gap_gs$country)
 ```
 
 
@@ -119,8 +133,10 @@ gap_small <- gapminder %>%
 
 Exercise: Make a bar chart of the number of times a continent has a country with population < 250,000 in the `gapminder` data set. Try with and without `scale_x_discrete(drop=FALSE)`.
 
-```{r}
-
+```{r, fig.width=4, fig,height=1.5}
+ggplot(gap_small, aes(continent)) +
+  geom_bar() +
+  scale_x_discrete(drop=FALSE)
 ```
 
 __Example of when it's bad__: If you ever use the `levels()` function.
@@ -137,7 +153,12 @@ Exercise: get rid of the unused factor levels for country and continent in diffe
 - Re-defining the variable as a factor
 
 ```{r}
-
+gap_small %>% 
+  droplevels() %>% 
+  str()
+gap_small %>% 
+  mutate(continent = fct_drop(continent)) %>% 
+  str()
 ```
 
 
@@ -152,7 +173,7 @@ levels(cont)
 
 Plotting happens in the order of the factor levels:
 
-```{r, fig.width=2, fig.height=1}
+```{r, fig.width=4, fig.height=1}
 qplot(cont)
 ```
 
@@ -165,10 +186,19 @@ Reorder by frequency:
 - Rearrange by frequency: `fct_infreq()`.
 - Reverse: `fct_rev()` 
 
-```{r, fig.width=2, fig.height=1}
+```{r, fig.width=4, fig.height=1.5}
 cont %>% 
+  #Reorders based on how frequently it appears
   fct_infreq() %>% 
   qplot()
+
+cont %>% 
+  fct_infreq() %>% 
+  fct_rev() %>% 
+  qplot()
+
+draw %>% 
+  fct_inorder()
 ```
 
 Could also arrange by the order they appear in the factor with `fct_inorder()`.
@@ -185,13 +215,15 @@ ggplot(gap_asia_2007, aes(lifeExp, country)) + geom_point()
 
 Let's use `fct_reorder()` to reorder the countries of `gap_asia_2007` by life Expectancy, and produce the same plot:
 
-```{r, fig.width=2, fig.height=1}
-
+```{r, fig.width=8, fig.height=6}
+gap_asia_2007 %>% 
+  mutate(country = fct_reorder(country, lifeExp)) %>% 
+  ggplot(aes(lifeExp, country)) + geom_point()
 ```
 
 What about when life Expectancy is not unique? Example: life expectancy of each continent:
 
-```{r, fig.width=2, fig.height=1}
+```{r, fig.width=6, fig.height=3}
 ggplot(gapminder, aes(continent, lifeExp)) +
   geom_violin()
 ggplot(gapminder, aes(continent, lifeExp)) +
@@ -202,9 +234,15 @@ ggplot(gapminder, aes(continent, lifeExp)) +
 
 Exercise: Try making the above box plot and violin plots, ordered by median lifeExp. Try other functions to order by by modifying the `.fun` argument.
 
-```{r, fig.width=2, fig.height=1}
+```{r, fig.width=6, fig.height=4}
+
+gapminder %>% 
+  mutate(continent = fct_reorder(continent, lifeExp)) %>% 
+  ggplot(aes(continent, lifeExp)) +
+  geom_boxplot()
 
 ```
+
 
 
 What if we have two variables plus a non-positional categorical variable? Example: Life expectancy for some select countries. Want legend "ordered by life expectancy" -- but what does that mean?
@@ -225,8 +263,11 @@ Use `fct_reorder2(f, x, y)` to reorder factor `f`:
 
 Exercise: Reorder the above line graph so that the legend is in order of last life expectancy. Useful for black-and-white printing!
 
-```{r, fig.width=2, fig.height=1}
-
+```{r, fig.width=6, fig.height=4}
+gap_select%>% 
+  mutate(country = fct_reorder2(country, year, lifeExp)) %>% 
+  ggplot(aes(year, lifeExp)) +
+  geom_line(aes(colour=country))
 ```
 
 ### Ordering "because I said so"
@@ -240,7 +281,7 @@ Here's how to use `fct_relevel()` to do that. Exercise: modify the code so that:
 
 ```{r}
 gap_asia_2007$country %>% 
-  fct_relevel("Syria") %>% 
+  fct_relevel("Syria", "Indonesia", after=2) %>% #choosel location of factor
   levels() %>% 
   head()
 ```
@@ -271,10 +312,11 @@ gap_2007 <- gapminder %>%
 
 We can arbitrarily combine levels using `fct_collapse()`. For example, combine Europe and Asia into one factor called "combo":
 
-```{r, fig.width=2, fig.height=1}
+```{r, fig.width=6, fig.height=2}
 cont %>% 
   fct_collapse("combo" = c("Europe", "Asia")) %>% 
-  qplot()
+  qplot() 
+ 
 ```
 
 More practically, we can lump the least frequent levels together as "Other". Modify the above code to use `fct_lump()` instead of `fct_collapse()` so that:
@@ -284,8 +326,13 @@ More practically, we can lump the least frequent levels together as "Other". Mod
 - You let `fct_lump()` decide on the number of non-other continents. How is this chosen?
 - Note: you can manually specify non-other levels using `fct_other()`.
 
-```{r, fig.width=2, fig.height=1}
-
+```{r, fig.width=6, fig.height=4}
+cont %>% 
+  fct_lump() %>% 
+  qplot()
+cont %>% 
+  fct_lump(n=2) %>% 
+  qplot() 
 ```
 
 We can use the `w` argument to lump by another variable.
@@ -295,7 +342,7 @@ Exercise: Modify the following violin plot of life expectancies of African count
 1. There are 4 "violins" corresponding to countries with the highest lifeExp.
 2. There are 4 "violins" corresponding to countries with the highest gdpPercap
 
-```{r, fig.width=2, fig.height=1}
+```{r, fig.width=8, fig.height=2}
 gap_africa <- gapminder %>% 
     filter(continent == "Africa")
 gap_africa %>% 
@@ -343,7 +390,8 @@ Goal here: some exposure to `lubridate`; know it exists.
 1. Use different combinations of y, m, d to make a date time object.
 
 ```{r}
-
+lubridate::ymd(170511)
+lubridate::ymd("2017-May-11")
 ```
 
 2. Get `year`, `month`, `yday`, `wday`, `day`.
