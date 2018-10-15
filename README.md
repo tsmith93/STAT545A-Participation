@@ -1,7 +1,15 @@
 # STAT545A-Participation
 Repository for STAT 545A participation activities
 
-In this repository, you will find folders containing .cmd files for each class activity. Below are links to each file.
+In this repository, you will find 
+
+-This README
+-Folders containing .cmd files for each class activity
+-An .RProj file for this repository
+
+
+
+Access participation files for each class by clicking the links below:
 
 - [Class 1]
 - [Class 2]
