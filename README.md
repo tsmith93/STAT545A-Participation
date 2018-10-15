@@ -1,5 +1,5 @@
 # STAT545A-Participation
-Repository for STAT 545A participation activities
+## Repository for STAT 545A participation activities
 
 In this repository, you will find 
 
@@ -7,8 +7,7 @@ In this repository, you will find
 2. Folders containing links or files for each class activity (links below!)
 3. An [.RProj](https://github.com/tsmith93/STAT545A-Participation/blob/master/STAT545A-Participation.Rproj) file for this repository
 
-
-
+## Class activities
 Access participation for each class by clicking the links below:
 
 - [Class 1](https://github.com/STAT545-UBC/Discussion-Internal/issues/2) - Look for comment by tsmith93 :)
