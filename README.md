@@ -3,9 +3,9 @@ Repository for STAT 545A participation activities
 
 In this repository, you will find 
 
-- This README
-- Folders containing .cmd files for each class activity
-- An .RProj file for this repository
+1. This README
+2. Folders containing .cmd files for each class activity
+3. An .RProj file for this repository
 
 
 
