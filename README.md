@@ -24,3 +24,5 @@ Access participation for each class by clicking the links below:
 - [Class 12](https://github.com/tsmith93/STAT545A-Participation/blob/master/Class%2012/cm012-exercise.Rmd)
 - [Class 13](https://github.com/tsmith93/STAT545A-Participation/blob/master/Class%2013/cm013-exercise.Rmd)
 - [Class 14](https://github.com/tsmith93/STAT545A-Participation/tree/master/Class%2014)
+
+Enjoy :)
