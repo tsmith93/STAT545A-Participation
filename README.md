@@ -30,7 +30,7 @@ Access participation for each class by clicking the links below:
 - [Class 104](https://github.com/tsmith93/STAT545A-Participation/tree/master/Class%20104)
 - [Class 105](https://github.com/tsmith93/STAT545A-Participation/tree/master/Class%20105)
 - [Class 107](https://github.com/tsmith93/STAT545A-Participation/tree/master/Class%20107)
-- [Class 109](https://github.com/tsmith93/STAT545A-Participation/tree/master/Class%20109
+- [Class 109](https://github.com/tsmith93/STAT545A-Participation/tree/master/Class%20109)
 - [Class 110](https://github.com/tsmith93/STAT545A-Participation/tree/master/Class%20110)
 - [Class 111](https://github.com/tsmith93/STAT545A-Participation/tree/master/Class%20111)
 
